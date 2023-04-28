@@ -28,7 +28,7 @@ function sinirli(req, res, next) {
 async function usernameBostami(req, res, next) {
   const { username } = req.body;
   const userExist = await User.goreBul({ username });
-  if ((userExist, length > 0)) {
+  if (userExist.length > 0) {
     res.status(422).json({ message: "Username kullaniliyor" });
   } else {
     next();
@@ -43,7 +43,17 @@ async function usernameBostami(req, res, next) {
     "message": "Geçersiz kriter"
   }
 */
-function usernameVarmi() {}
+async function usernameVarmi(req, res, next) {
+  const { username } = req.body;
+  const userExist = await User.goreBul({ username }).first();
+  if (userExist.length == 0) {
+    res.status(401).json({
+      message: "Geçersiz kriter",
+    });
+  } else {
+    next();
+  }
+}
 
 /*
   req.body de şifre yoksa veya 3 karakterden azsa
@@ -53,7 +63,14 @@ function usernameVarmi() {}
     "message": "Şifre 3 karakterden fazla olmalı"
   }
 */
-function sifreGecerlimi() {}
+function sifreGecerlimi(req, res, next) {
+  const { password } = req.body;
+  if (!password || password.length < 3) {
+    res.status(422).json({ message: "Şifre 3 karakterden fazla olmalı" });
+  } else {
+    next();
+  }
+}
 
 // Diğer modüllerde kullanılabilmesi için fonksiyonları "exports" nesnesine eklemeyi unutmayın.
 
