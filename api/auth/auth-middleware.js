@@ -13,7 +13,7 @@ function sinirli(req, res, next) {
   if (req.session.user) {
     next();
   } else {
-    res.status(401).json({ message: "Geçemezsiniz" });
+    res.status(401).json({ message: "Geçemezsiniz!" });
   }
 }
 
@@ -46,7 +46,7 @@ async function usernameBostami(req, res, next) {
 async function usernameVarmi(req, res, next) {
   const { username } = req.body;
   const userExist = await User.goreBul({ username }).first();
-  if (userExist.length == 0) {
+  if (!userExist) {
     res.status(401).json({
       message: "Geçersiz kriter",
     });
